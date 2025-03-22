@@ -70,6 +70,7 @@ const ApplyNow = () => {
 
   return (
     <div className="apply-container">
+      <h1>apply job</h1>
       <h2 className="apply-title">Apply for <span>{job?.title}</span></h2>
       <form className="apply-form" onSubmit={handleSubmit}>
         <div className="form-group">
