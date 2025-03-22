@@ -1,0 +1,86 @@
+.container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #007bff;
+    width: 100%;
+    height: 80px;
+    padding: 0 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo h2 {
+    color: white;
+    font-size: 24px;
+}
+
+.nav {
+    display: flex;
+    list-style-type: none;
+    gap: 20px;
+    padding: 0;
+}
+
+.nav li a {
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav li a:hover {
+    color: yellow;
+}
+
+.btn {
+    display: flex;
+    gap: 10px;
+}
+
+.btn button {
+    height: 60px;
+    width: 90px;
+    border: none;
+    background-color: #ff5733;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    
+}
+
+.btn button:hover {
+    background-color: #d84315;
+}
+
+.btn button a {
+    text-decoration: none;
+    color: white;
+    display: block;
+    width: 100%;
+    height: 100%;
+    line-height: 40px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        height: auto;
+        padding: 10px;
+    }
+    
+    .nav {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .btn {
+        margin-top: 10px;
+    }
+}

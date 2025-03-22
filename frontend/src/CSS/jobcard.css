@@ -1,0 +1,81 @@
+.job-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
+  gap: 20px;
+  justify-content: center;
+  max-width: 1000px;
+  margin: 40px auto;
+  overflow-y:hidden ;
+}
+
+.job-card {
+  width: 300px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out;
+  background: #fff;
+  text-align: center;
+  padding: 20px;
+}
+
+.job-card:hover {
+  transform: scale(1.05);
+}
+
+.job-logo {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.job-content h3 {
+  font-size: 18px;
+  color: #333;
+}
+
+.job-company {
+  font-weight: bold;
+  color: #555;
+}
+
+.job-location {
+  color: #777;
+  margin: 5px 0;
+}
+
+.job-salary {
+  font-size: 16px;
+  color: #28a745;
+  font-weight: bold;
+}
+
+.apply-btn {
+  margin-top: 10px;
+  padding: 10px 15px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.apply-btn:hover {
+  background: #0056b3;
+}
+
+
+
+@media (max-width: 900px) {
+  .job-list {
+    grid-template-columns: repeat(2, 1fr); /* 2 cards per row on smaller screens */
+  }
+}
+
+@media (max-width: 600px) {
+  .job-list {
+    grid-template-columns: repeat(1, 1fr); /* 1 card per row on mobile */
+  }
+}
