@@ -6,31 +6,33 @@ import { uploadOnClodinary } from "../utils/cloudinary.js";
 // Apply for a Job (User applies for a job)
 export const applyForJob = async (req, res) => {
     try {
-        const { jobId, userId } = req.body;
+        const { name,email,phoneNumber,jobId,userId } = req.body;
 
-        if (!jobId || !userId) {
+        if (!jobId || !name || !email || !phoneNumber ) {
             return res.status(400).json({ message: "Job ID and User ID are required" });
         }
 
-        // Check if the job exists
+       
         const job = await Job.findById(jobId);
         if (!job) {
             return res.status(404).json({ message: "Job not found" });
         }
 
-        // Check if the user exists
+        
+
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
+        
 
-        // Check if user has already applied
+        
         const existingApplication = await Application.findOne({ jobId, userId });
         if (existingApplication) {
             return res.status(400).json({ message: "User has already applied for this job" });
         }
 
-        // Check if resume is provided
+        
         let resumeLocalPath = req.files?.resume?.[0]?.path;
         if (!resumeLocalPath) {
             return res.status(400).json({ message: "Resume is required" });

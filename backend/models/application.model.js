@@ -11,6 +11,20 @@ const applicationSchema=new mongoose.Schema({
         ref:"User",
         required:true,
     },
+    name:{
+        type:String,
+        required:true,
+
+    },
+    email:{
+        type:String,
+        require:true,
+
+    },
+    phoneNumber:{
+        type:String,
+        require:true,
+    },
     status:{
         type:String,
         enum:['pending','accepted','rejected'],

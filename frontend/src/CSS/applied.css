@@ -1,0 +1,24 @@
+.applied-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .applied-job {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    background: #f9f9f9;
+  }
+  
+  .applied-job h3 {
+    margin: 0;
+    color: #007bff;
+  }
+  
+  .error {
+    color: red;
+    font-weight: bold;
+  }
+  
