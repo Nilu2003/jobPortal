@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../CSS/applied.css"
+import "../CSS/applied.css";
 
 const Applied = () => {
   const [appliedJobs, setAppliedJobs] = useState([]);
@@ -22,10 +22,10 @@ const Applied = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/v1/application/get-application/${userId}`
+          `http://localhost:8000/api/v1/application/get-application-user/${userId}`
         );
 
-        setAppliedJobs(response.data.applications || []);
+        setAppliedJobs(response.data || []);
       } catch (err) {
         setError("Failed to fetch applied jobs.");
         console.error(err);
@@ -50,10 +50,11 @@ const Applied = () => {
         <ul>
           {appliedJobs.map((job) => (
             <li key={job._id} className="applied-job">
-              <h3>{job.title}</h3>
-              <p><strong>Company:</strong> {job.companyName}</p>
+              <h3>{job.jobId?.title}</h3>
+              <p><strong>Company:</strong> {job.jobId?.companyName}</p>
+              <p><strong>Location:</strong> {job.jobId?.location}</p>
               <p><strong>Status:</strong> {job.status}</p>
-              <p><strong>Applied Date:</strong> {new Date(job.appliedAt).toLocaleDateString()}</p>
+              <p><strong>Applied Date:</strong> {new Date(job.createdAt).toLocaleDateString()}</p>
             </li>
           ))}
         </ul>

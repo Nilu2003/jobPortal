@@ -81,7 +81,6 @@ const registerUser = async (req, res) => {
             phoneNumber,
             role,
             password: hashpassword,
-            // resume:resume?.url || ""
 
 
         })

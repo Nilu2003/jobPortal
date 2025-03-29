@@ -1,33 +1,38 @@
 import { useEffect, useState } from "react";
-import axios from "axios"
+import axios from "axios";
 import JobCard from "./JobCard";
 import "../CSS/jobcard.css";
 
+const LatestJob = ({ jobs }) => {
+  const [latestJobs, setLatestJobs] = useState([]);
 
-const LatestJob = () => {
-    const [jobs,setJobs] =useState([]);
-     useEffect(() =>{
-        const fetchJob = async() => {
-            try {
-                const response= await axios.get("http://localhost:8000/api/v1/job/getjob");
-                console.log(response);
-                const sortedJob=response.data.jobs.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
-                setJobs(sortedJob.slice(0,6));
-            } catch (error) {
-                console.error("Error fething job",error);
-            }
+  useEffect(() => {
+    if (jobs && jobs.length > 0) {
+      setLatestJobs(jobs); // If search results exist, use them
+    } else if (!jobs) {
+      // Fetch latest jobs only if no search results exist
+      const fetchJob = async () => {
+        try {
+          const response = await axios.get("http://localhost:8000/api/v1/job/getjob");
+          const sortedJob = response.data.jobs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+          setLatestJobs(sortedJob.slice(0, 6));
+        } catch (error) {
+          console.error("Error fetching job", error);
         }
-        fetchJob()
-     },[]);
+      };
+      fetchJob();
+    }
+  }, [jobs]); // Refetch when jobs change (search results)
+
   return (
     <div className="job-list">
-        {jobs.length > 0 ? (
-        jobs.map((job) => <JobCard key={job._id} job={job} />)
+      {latestJobs.length > 0 ? (
+        latestJobs.map((job) => <JobCard key={job._id} job={job} />)
       ) : (
         <p>No jobs available</p>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default LatestJob
+export default LatestJob;

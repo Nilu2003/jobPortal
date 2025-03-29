@@ -7,22 +7,26 @@ const Headers = () => {
   const [auth, setAuth] = useState(localStorage.getItem("auth") === "true");
 
   useEffect(() => {
-    const handleStorageChange = () => {
+    const handleAuthChange = () => {
       setAuth(localStorage.getItem("auth") === "true");
     };
 
-    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("authChange", handleAuthChange);
+
     return () => {
-      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("authChange", handleAuthChange);
     };
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("auth");
-    localStorage.removeItem("user"); // Clear user data
+    localStorage.removeItem("user");
+    localStorage.removeItem("role"); // ✅ Fix: Remove role on logout
     setAuth(false);
     navigate("/login");
+    window.dispatchEvent(new Event("authChange"));
   };
+  
 
   return (
     <div className="container">

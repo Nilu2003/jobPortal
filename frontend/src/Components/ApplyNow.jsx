@@ -45,32 +45,49 @@ const ApplyNow = () => {
       alert("Please upload a resume!");
       return;
     }
-
+  
+    const storedUser = localStorage.getItem("user");
+    if (!storedUser) {
+      alert("User not found. Please log in.");
+      return;
+    }
+  
+    const loggedInUser = JSON.parse(storedUser);
+    const userId = loggedInUser._id; // Ensure userId is present
+    const jobId = job?._id; // Get jobId from job details
+  
+    if (!jobId) {
+      alert("Job details are missing.");
+      return;
+    }
+  
     const formData = new FormData();
     formData.append("fullname", user.fullname);
     formData.append("email", user.email);
     formData.append("phoneNumber", user.phoneNumber);
-    formData.append("yearsOfExperience", yearsOfExperience || "0"); // Default to 0 if not provided
+    formData.append("yearsOfExperience", yearsOfExperience || "0");
     formData.append("resume", resume);
-
+    formData.append("jobId", jobId);  // Attach jobId
+    formData.append("userId", userId);  // Attach userId
+  
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/application/apply-job",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-      console.log(response);
-
+      // console.log(response);
+  
       alert(response.data.message);
     } catch (error) {
       console.error(error);
       alert("Application submission failed!");
     }
   };
+  
 
   return (
     <div className="apply-container">
-      <h1>apply job</h1>
       <h2 className="apply-title">Apply for <span>{job?.title}</span></h2>
       <form className="apply-form" onSubmit={handleSubmit}>
         <div className="form-group">
@@ -96,7 +113,7 @@ const ApplyNow = () => {
         <div className="form-group">
           <label>Phone Number:</label>
           <input
-            type="text"
+            type="Number"
             name="phoneNumber"
             value={user.phoneNumber}
             onChange={handleInputChange}

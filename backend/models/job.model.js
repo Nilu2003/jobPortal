@@ -26,9 +26,10 @@ const jobSchema= new mongoose.Schema({
         required:true
     },
     
-    createdBY:{
+    createdBy:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"User"
+        ref:"User",
+        required:true,
     },
     logo:{
         type:String,

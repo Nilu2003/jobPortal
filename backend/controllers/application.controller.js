@@ -1,58 +1,53 @@
+import mongoose from "mongoose";
 import { Application } from "../models/application.model.js";
 import { Job } from "../models/job.model.js";
 import { User } from "../models/user.model.js";
 import { uploadOnClodinary } from "../utils/cloudinary.js";
 
-// Apply for a Job (User applies for a job)
 export const applyForJob = async (req, res) => {
     try {
-        const { name,email,phoneNumber,jobId,userId } = req.body;
+        const { fullname, email, phoneNumber, yearsOfExperience, jobId,userId} = req.body;
+        // const userId = req.user?._id; 
+        // Extract user ID from JWT (if authenticated user)
 
-        if (!jobId || !name || !email || !phoneNumber ) {
-            return res.status(400).json({ message: "Job ID and User ID are required" });
-        }
-
-       
-        const job = await Job.findById(jobId);
-        if (!job) {
-            return res.status(404).json({ message: "Job not found" });
-        }
-
+        // console.log( req.body);
         
 
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-        
-
-        
-        const existingApplication = await Application.findOne({ jobId, userId });
-        if (existingApplication) {
-            return res.status(400).json({ message: "User has already applied for this job" });
+        if (!fullname || !email || !phoneNumber || !yearsOfExperience || !jobId || !userId) {
+            return res.status(400).json({ message: "All fields are required" });
         }
 
-        
+        // Validate Job ID and User ID
+        if (!mongoose.Types.ObjectId.isValid(jobId) || !mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ message: "Invalid job ID or user ID" });
+        }
+
         let resumeLocalPath = req.files?.resume?.[0]?.path;
         if (!resumeLocalPath) {
             return res.status(400).json({ message: "Resume is required" });
         }
 
-        // Upload to Cloudinary
-        let resume1;
+       let resume;
         try {
-            resume1 = await uploadOnClodinary(resumeLocalPath);
-            if (!resume1?.url) throw new Error("Cloudinary upload failed");
+            resume = await uploadOnClodinary(resumeLocalPath);
+            if (!resume?.url) throw new Error("Cloudinary upload failed");
         } catch (error) {
             return res.status(500).json({ message: "Resume upload failed", error: error.message });
         }
 
-        // Create a new application
+        // console.log(resume.url);run dev
+
+        
+
         const newApplication = new Application({
-            jobId,
             userId,
+            jobId,
+            fullname,
+            email,
+            phoneNumber,
+            yearsOfExperience,
             status: "pending",
-            resume: resume1.url
+            resume: resume.url || "",
         });
 
         await newApplication.save();
@@ -62,6 +57,7 @@ export const applyForJob = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
 
 // Get All Applications (Admin view)
 export const getAllApplications = async (req, res) => {
@@ -127,3 +123,65 @@ export const deleteApplication = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
+
+
+// Get Applications by User (User Dashboard)
+export const getApplicationsByUser = async (req, res) => {
+    try {
+
+        console.log("Request Params:", req.params.id);
+        // console.log("Request Params:", req.user.id);
+
+        const userId = req.params.id; // Assuming user ID is extracted from JWT token
+
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ message: "Invalid user ID" });
+        }
+
+        const applications = await Application.find({ userId })
+            .populate({
+                path: "jobId",
+                select: "title companyName location", // Show relevant job details
+            })
+            .sort({ createdAt: -1 }); // Sort by latest application first
+
+        res.status(200).json(applications);
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+
+
+
+
+export const getApplicationsForRecruiter = async (req, res) => {
+    try {
+        const { recruiterId } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(recruiterId)) {
+            return res.status(400).json({ message: "Invalid recruiter ID" });
+        }
+
+        // Find jobs created by this recruiter
+        const recruiterJobs = await Job.find({ createdBy: recruiterId }).select("_id");
+
+        if (recruiterJobs.length === 0) {
+            return res.status(404).json({ message: "No jobs found for this recruiter" });
+        }
+
+        const jobIds = recruiterJobs.map((job) => job._id);
+
+        // Find applications for these jobs
+        const applications = await Application.find({ jobId: { $in: jobIds } })
+            .populate("jobId", "title companyName location")
+            .populate("userId", "fullname email phoneNumber");
+
+        res.status(200).json(applications);
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+

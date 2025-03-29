@@ -3,27 +3,26 @@ import mongoose from "mongoose";
 const applicationSchema=new mongoose.Schema({
     jobId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Job",
-        required:true
+        ref:"Job", 
     },
     userId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
-        required:true,
     },
-    name:{
+    
+    fullname:{
         type:String,
         required:true,
 
     },
     email:{
         type:String,
-        require:true,
+        required:true,
 
     },
     phoneNumber:{
-        type:String,
-        require:true,
+        type:Number,
+        required:true,
     },
     status:{
         type:String,
@@ -32,7 +31,11 @@ const applicationSchema=new mongoose.Schema({
     },
     resume:{
         type:String,
-        require:true,
+        required:true,
+    },
+    yearsOfExperience:{
+        type:String,
+        required:true,
     }
 },{timestamps:true})
 

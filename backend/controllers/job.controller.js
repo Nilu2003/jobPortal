@@ -90,24 +90,30 @@ export const getJobById = async (req, res) => {
 // Update Job - Only recruiters can update jobs
 export const updateJob = async (req, res) => {
     try {
-        const { email } = req.body;
+        const { email } = req.body; // Recruiter's email
         const user = await User.findOne({ email });
 
         if (!user || user.role !== "recruiter") {
             return res.status(403).json({ message: "Only recruiters can update jobs" });
         }
 
-        const updatedJob = await Job.findByIdAndUpdate(req.params.id, req.body, { new: true });
-
-        if (!updatedJob) {
+        // Check if the recruiter is the creator of the job
+        const job = await Job.findById(req.params.id);
+        if (!job) {
             return res.status(404).json({ message: "Job not found" });
         }
 
+        if (job.createdBy.toString() !== user._id.toString()) {
+            return res.status(403).json({ message: "You can only update your own jobs" });
+        }
+
+        const updatedJob = await Job.findByIdAndUpdate(req.params.id, req.body, { new: true });
         res.status(200).json({ message: "Job updated successfully", job: updatedJob });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
 
 // Delete Job - Only recruiters can delete jobs
 export const deleteJob = async (req, res) => {
@@ -130,3 +136,56 @@ export const deleteJob = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
+
+
+export const searchJobs = async (req, res) => {
+    try {
+        const { query, location } = req.query;
+        let filter = {};
+
+        if (query) {
+            filter.$or = [
+                { title: { $regex: query, $options: "i" } },
+                { companyName: { $regex: query, $options: "i" } }
+            ];
+        }
+
+        if (location) {
+            filter.location = { $regex: location, $options: "i" };
+        }
+
+        const jobs = await Job.find(filter);
+        res.status(200).json(jobs);
+    } catch (error) {
+        res.status(500).json({ message: "Error searching jobs", error: error.message });
+    }
+};
+
+
+
+
+export const getJobsByRecruiter = async (req, res) => {
+    try {
+        const { email } = req.body; // Assuming email is sent in the request
+
+        if (!email) {
+            return res.status(400).json({ message: "Recruiter email is required" });
+        }
+
+        // Find recruiter by email
+        const recruiter = await User.findOne({ email });
+
+        if (!recruiter || recruiter.role !== "recruiter") {
+            return res.status(403).json({ message: "Unauthorized access" });
+        }
+
+        // Fetch only jobs created by this recruiter
+        const jobs = await Job.find({ createdBy: recruiter._id });
+
+        res.status(200).json({ jobs, count: jobs.length });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
