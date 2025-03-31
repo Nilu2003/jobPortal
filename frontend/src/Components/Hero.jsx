@@ -7,18 +7,27 @@ const Hero = ({ onSearchResults }) => {
   const [location, setLocation] = useState("");
 
   const handleSearch = async () => {
+    if (!query.trim() && !location.trim()) {
+      alert("Please enter a job title or location to search.");
+      return;
+    }
+
     try {
       const response = await axios.get("http://localhost:8000/api/v1/job/search", {
-        params: { query: query.trim(), location: location.trim() },
+        params: { 
+          query: query.trim() || "", 
+          location: location.trim() || "" // Default to Remote if empty
+        },
       });
-      onSearchResults(response.data.jobs);
+
+      console.log("Search API Response:", response.data);
+      onSearchResults(response.data || []); // Ensure empty array if no jobs found
+      
     } catch (error) {
       console.error("Error fetching jobs:", error);
       alert("Failed to fetch jobs. Please try again!");
     }
   };
-  
-  
 
   return (
     <header className="header">

@@ -7,18 +7,13 @@ const Home = () => {
 
   return (
     <>
-      
       <Hero onSearchResults={setJobs} />
       <h2 style={{ textAlign: "center", marginTop: "20px" }}>
         {jobs.length > 0 ? "Search Results" : "Latest Job Openings"}
       </h2>
-      {jobs.length > 0 ? <LatestJob jobs={jobs} /> : <LatestJob />}
-
+      <LatestJob jobs={jobs} />
     </>
   );
 };
 
-
-
-export default Home
-
+export default Home;

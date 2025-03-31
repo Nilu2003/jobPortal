@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import axios from "axios";
 import "../CSS/applyNow.css"; // Import CSS for styling
 
@@ -121,7 +121,7 @@ const ApplyNow = () => {
           />
         </div>
         <div className="form-group">
-          <label>Years of Experience:</label>
+          <label>Years of Experience:</label> 
           <input
             type="number"
             min="0"
@@ -135,7 +135,9 @@ const ApplyNow = () => {
           <label>Upload Resume:</label>
           <input type="file" accept=".pdf,.doc,.docx" onChange={handleFileChange} required />
         </div>
+        <NavLink to="/">
         <button className="apply-btn" type="submit">Submit Application</button>
+        </NavLink>
       </form>
     </div>
   );

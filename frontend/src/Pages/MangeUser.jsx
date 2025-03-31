@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "../CSS/manageUser.css"; // Ensure CSS exists
+import "../CSS/manageUser.css"; 
 
 const ManageUser = () => {
   const [applications, setApplications] = useState([]);

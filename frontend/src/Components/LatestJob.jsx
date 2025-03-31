@@ -8,9 +8,8 @@ const LatestJob = ({ jobs }) => {
 
   useEffect(() => {
     if (jobs && jobs.length > 0) {
-      setLatestJobs(jobs); // If search results exist, use them
-    } else if (!jobs) {
-      // Fetch latest jobs only if no search results exist
+      setLatestJobs(jobs); // Show search results
+    } else {
       const fetchJob = async () => {
         try {
           const response = await axios.get("http://localhost:8000/api/v1/job/getjob");
@@ -22,7 +21,7 @@ const LatestJob = ({ jobs }) => {
       };
       fetchJob();
     }
-  }, [jobs]); // Refetch when jobs change (search results)
+  }, [jobs]); // Update when search results change
 
   return (
     <div className="job-list">

@@ -74,30 +74,34 @@ export const getAllJobs = async (req, res) => {
 
 // Get Job by ID
 export const getJobById = async (req, res) => {
+    const { id } = req.params;
+    
+    if (!id || id.length !== 24) {
+        return res.status(400).json({ error: "Invalid job ID" });
+    }
+
     try {
-        const job = await Job.findById(req.params.id);
-
+        const job = await Job.findById(id);
         if (!job) {
-            return res.status(404).json({ message: "Job not found" });
+            return res.status(404).json({ error: "Job not found" });
         }
-
-        res.status(200).json(job);
+        res.json(job);
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ error: "Server error" });
     }
 };
+
 
 // Update Job - Only recruiters can update jobs
 export const updateJob = async (req, res) => {
     try {
-        const { email } = req.body; // Recruiter's email
+        const { email, ...jobData } = req.body; 
         const user = await User.findOne({ email });
 
         if (!user || user.role !== "recruiter") {
             return res.status(403).json({ message: "Only recruiters can update jobs" });
         }
 
-        // Check if the recruiter is the creator of the job
         const job = await Job.findById(req.params.id);
         if (!job) {
             return res.status(404).json({ message: "Job not found" });
@@ -107,12 +111,15 @@ export const updateJob = async (req, res) => {
             return res.status(403).json({ message: "You can only update your own jobs" });
         }
 
-        const updatedJob = await Job.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        res.status(200).json({ message: "Job updated successfully", job: updatedJob });
+        const updatedJob = await Job.findByIdAndUpdate(req.params.id, jobData, { new: true });
+        return res.status(200).json({ message: "Job updated successfully", job: updatedJob });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        console.error("Update Job Error:", error);
+        return res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
+
 
 
 // Delete Job - Only recruiters can delete jobs

@@ -1,21 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import "../CSS/adminJob.css"; // Ensure you have this CSS file
+import { NavLink, useNavigate } from "react-router-dom";
+import "../CSS/adminJob.css"; 
 
 const AdminJob = () => {
   const [jobs, setJobs] = useState([]);
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    salary: "",
-    jobType: "",
-    location: "",
-    companyName: "",
-  });
+ 
 
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+
   
   const user = JSON.parse(localStorage.getItem("user")); // Get logged-in user
   const email = user?.email;
@@ -39,31 +33,18 @@ const AdminJob = () => {
   }, [email, navigate]);
 
   const handleEdit = (jobId) => {
-    navigate(`http://localhost:8000/api/v1/job/getjob/${jobId}`);
+    navigate(`/job-edit/${jobId}`);
   };
+  
 
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  
 
-  const handleCreateJob = async (e) => {
-    e.preventDefault();
-    setMessage("");
+  
 
-    try {
-      const response = await axios.post("http://localhost:8000/api/v1/job/register-job", {
-        ...formData,
-        email, // Send recruiter's email
-      });
 
-      setJobs([...jobs, response.data.job]); // Update job list
-      setMessage("Job created successfully!");
-      setFormData({ title: "", description: "", salary: "", jobType: "", location: "", companyName: "" });
-    } catch (error) {
-      console.error("Error creating job:", error.response?.data);
-      setMessage("Failed to create job.");
-    }
-  };
+    
+
+ 
 
   return (
     <div className="admin-job-container">
@@ -98,17 +79,9 @@ const AdminJob = () => {
       )}
 
       {/* Job Creation Form */}
-      <h3>Create a New Job</h3>
-      {message && <p className="message">{message}</p>}
-      <form className="job-form" onSubmit={handleCreateJob}>
-        <input type="text" name="title" placeholder="Job Title" required value={formData.title} onChange={handleInputChange} />
-        <textarea name="description" placeholder="Job Description" required value={formData.description} onChange={handleInputChange}></textarea>
-        <input type="text" name="salary" placeholder="Salary" required value={formData.salary} onChange={handleInputChange} />
-        <input type="text" name="jobType" placeholder="Job Type (Full-time, Part-time)" required value={formData.jobType} onChange={handleInputChange} />
-        <input type="text" name="location" placeholder="Location" required value={formData.location} onChange={handleInputChange} />
-        <input type="text" name="companyName" placeholder="Company Name" required value={formData.companyName} onChange={handleInputChange} />
-        <button type="submit" className="create-btn">Create Job</button>
-      </form>
+     <NavLink to="/create-job">
+        <button>Create Job</button>
+     </NavLink>
     </div>
   );
 };
