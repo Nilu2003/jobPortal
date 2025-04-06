@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import "../CSS/adminjob.css";
+import "../CSS/adminJob.css";
 
 const JobEdit = () => {
   const { jobId } = useParams();
