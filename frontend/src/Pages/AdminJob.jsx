@@ -22,7 +22,7 @@ const AdminJob = () => {
     
     const fetchJobs = async () => {
       try {
-        const response = await axios.post("http://localhost:8000/api/v1/job/jobs/recruiter", { email });
+        const response = await axios.post("http://jobportal-r2s1.onrender.com/api/v1/job/jobs/recruiter", { email });
         setJobs(response.data.jobs);
       } catch (error) {
         console.error("Error fetching jobs:", error);

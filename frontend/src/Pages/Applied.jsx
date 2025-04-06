@@ -22,7 +22,7 @@ const Applied = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/v1/application/get-application-user/${userId}`
+          `http://jobportal-r2s1.onrender.com/api/v1/application/get-application-user/${userId}`
         );
 
         setAppliedJobs(response.data || []);

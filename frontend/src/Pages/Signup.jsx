@@ -14,7 +14,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/api/v1/user/register', data);
+      const response = await axios.post('http://jobportal-r2s1.onrender.com/api/v1/user/register', data);
       console.log('Signup successful:', response.data);
       navigate('/login');
     } catch (error) {

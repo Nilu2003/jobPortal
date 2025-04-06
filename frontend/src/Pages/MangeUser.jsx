@@ -17,7 +17,7 @@ const ManageUser = () => {
           return;
         }
 
-        const response = await axios.get(`http://localhost:8000/api/v1/application/recruiter-applications/${recruiterId}`);
+        const response = await axios.get(`http://jobportal-r2s1.onrender.com/api/v1/application/recruiter-applications/${recruiterId}`);
         console.log(response);
         
         setApplications(response.data);

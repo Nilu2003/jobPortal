@@ -18,7 +18,7 @@ const Login = () => {
     setError("");
   
     try {
-      const response = await axios.post('http://localhost:8000/api/v1/user/login', data);
+      const response = await axios.post('http://jobportal-r2s1.onrender.com/api/v1/user/login', data);
       console.log("API Response:", response.data);
   
       if (response.data.user) {
