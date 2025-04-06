@@ -18,7 +18,7 @@ import CreateJob from "./Components/CreateJob";
 // Helper function to protect routes
 const ProtectedRoute = ({ element }) => {
   const role = localStorage.getItem("role");
-  console.log("Checking role for route:", role); // ✅ Debugging
+  console.log("Checking role for route:", role);
   return role === "admin" ? element : <Navigate to="/" replace />;
 };
 

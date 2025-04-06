@@ -12,13 +12,14 @@ const ManageUser = () => {
         // Get recruiter details from localStorage
         const storedUser = JSON.parse(localStorage.getItem("user"));
         const recruiterId = storedUser?._id; // Assuming user._id is the recruiter's ID
-
         if (!recruiterId) {
           console.error("Recruiter ID not found in localStorage.");
           return;
         }
 
         const response = await axios.get(`http://localhost:8000/api/v1/application/recruiter-applications/${recruiterId}`);
+        console.log(response);
+        
         setApplications(response.data);
       } catch (error) {
         console.error("Error fetching applications:", error);

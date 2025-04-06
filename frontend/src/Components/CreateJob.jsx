@@ -19,7 +19,7 @@ const CreateJob = () => {
         setLogo(e.target.files[0]);
       };
 
-      const user = JSON.parse(localStorage.getItem("user")); // Get logged-in user
+     const user = JSON.parse(localStorage.getItem("user")); // Get logged-in user
      const email = user?.email;
 
 
