@@ -18,7 +18,7 @@ const JobEdit = () => {
         const response = await fetch(`http://localhost:8000/api/v1/job/getjob/${jobId}`);
         const data = await response.json();
         
-        if (!response.ok) {
+        if (!response) {
           throw new Error(data.message || "Failed to fetch job");
         }
 
